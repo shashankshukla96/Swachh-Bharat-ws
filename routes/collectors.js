@@ -85,6 +85,8 @@ router.get('/reports/today/:id', async (req, res, next) => {
             collector_id: req.params.id,
             collection_date : new Date(new Date().toDateString()).getTime()
         })
+
+        console.log(reports)
         message.sendMessage(res, reports, null, "Reports Found !", 200);
     } catch(err) {
         console.log(err);
