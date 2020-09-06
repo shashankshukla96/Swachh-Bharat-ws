@@ -3,9 +3,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const reportSchema = Schema({
-    id: {
-        type: String,
-    },
     collector_id: {
         type: String,
     },
@@ -13,32 +10,31 @@ const reportSchema = Schema({
         type: String,
     },
     collection_date: {
-        type: Number,
+        type: Date,
     },
     reason: {
         type: String,
     },
-    file_path: {
+    home_picture: {
         type: String,
     },
-    location: {
-        type: {
-            address: {
-                type: String,
-            },
-            lat: {
-                type: String,
-            },
-            long: {
-                type: String,
-            },
-            city: {
-                type: String,
-            },
-            state: {
-                type: String,
-            },
-        },
+    waste_picture: {
+        type: String,
+    },
+    address: {
+        type: String,
+    },
+    lat: {
+        type: String,
+    },
+    long: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
+    state: {
+        type: String,
     },
     supervisor_id: {
         type: String,
