@@ -10,7 +10,7 @@ const reportSchema = Schema({
         type: String,
     },
     collection_date: {
-        type: Date,
+        type: Number,
     },
     reason: {
         type: String,
@@ -28,6 +28,12 @@ const reportSchema = Schema({
         type: String,
     },
     long: {
+        type: String,
+    },
+    locality: {
+        type: String,
+    },
+    sublocality: {
         type: String,
     },
     city: {

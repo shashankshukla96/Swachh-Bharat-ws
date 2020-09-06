@@ -19,7 +19,6 @@ function makeid(length) {
     return result;
 }
 
-/* GET users listing. */
 router.post("/login", async (req, res, next) => {
     try {
         const collector = await collectorModel.findOne({
@@ -54,36 +53,58 @@ router.post("/login", async (req, res, next) => {
 router.post("/report", async (req, res, next) => {
     try {
         const data = req.body;
-        const reportData = {
-            collector_id: data.collector_id,
-            collector_name: data.collector_name,
-            collection_date: new Date(),
-            reason: data.reason,
-            location: data.location,
-        };
-
-        const img = data.housePicture.split(",")[1];
+        const imgHouse = data.house.split(",")[1];
+        const imgWaste = data.waste.split(",")[1];
+        data.collection_date = new Date(new Date().toDateString()).getTime()
         const idHouse = makeid(6);
         const idWaste = makeid(6);
 
-        await base64.decode(img, {
-            fname: "./public/images/reports" + idHouse,
+        base64.decode(imgHouse, {
+            fname: "./public/images/reports/" + idHouse,
             ext: "png",
-        });
-
-        await base64.decode(img, {
-            fname: "./public/images/reports" + idWaste,
-            ext: "png",
-        });
-
-        data.homePicture = "images/reports/" + idHouse + ".png";
-        data.wastePicture = "images/reports/" + idWaste + ".png";
-
-        await reportModel.create(reportData);
-        message.sendMessage(res, null, null, "Report Added !", 200);
+        }).then(data1 => {
+            base64.decode(imgWaste, {
+                fname: "./public/images/reports/" + idWaste,
+                ext: "png",
+            }).then(async data2 => {
+                data.home_picture ="images/reports/" + idHouse + ".png";
+                data.waste_picture =  "images/reports/" + idWaste + ".png";
+                await reportModel.create(data);
+                message.sendMessage(res, null, null, "Report Added !", 200);
+            })
+        })
+        
     } catch (err) {
         message.sendMessage(res, {}, err);
     }
 });
+
+router.get('/reports/today/:id', async (req, res, next) => {
+    try {
+        const reports = await reportModel.find({
+            collector_id: req.params.id,
+            collection_date : new Date(new Date().toDateString()).getTime()
+        })
+        message.sendMessage(res, reports, null, "Reports Found !", 200);
+    } catch(err) {
+        console.log(err);
+        message.sendMessage(res, {}, err);
+    }
+})
+
+router.post('/reports/date/:id', async (req, res, next) => {
+    try {
+        const reports = await reportModel.find({
+            collector_id: req.params.id,
+            collection_date : new Date(new Date(req.body.date).toDateString()).getTime()
+        })
+        message.sendMessage(res, reports, null, "Reports Found !", 200);
+    } catch(err) {
+        console.log(err);
+        message.sendMessage(res, {}, err);
+    }
+})
+
+
 
 module.exports = router;
