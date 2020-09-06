@@ -55,58 +55,70 @@ router.post("/report", async (req, res, next) => {
         const data = req.body;
         const imgHouse = data.house.split(",")[1];
         const imgWaste = data.waste.split(",")[1];
-        data.collection_date = new Date(new Date().toDateString()).getTime()
+        data.collection_date = new Date(new Date().toDateString()).getTime();
         const idHouse = makeid(6);
         const idWaste = makeid(6);
 
-        base64.decode(imgHouse, {
-            fname: "./public/images/reports/" + idHouse,
-            ext: "png",
-        }).then(data1 => {
-            base64.decode(imgWaste, {
-                fname: "./public/images/reports/" + idWaste,
+        base64
+            .decode(imgHouse, {
+                fname: "./public/images/reports/" + idHouse,
                 ext: "png",
-            }).then(async data2 => {
-                data.home_picture ="images/reports/" + idHouse + ".png";
-                data.waste_picture =  "images/reports/" + idWaste + ".png";
-                await reportModel.create(data);
-                message.sendMessage(res, null, null, "Report Added !", 200);
             })
-        })
-        
+            .then((data1) => {
+                base64
+                    .decode(imgWaste, {
+                        fname: "./public/images/reports/" + idWaste,
+                        ext: "png",
+                    })
+                    .then(async (data2) => {
+                        data.home_picture =
+                            "images/reports/" + idHouse + ".png";
+                        data.waste_picture =
+                            "images/reports/" + idWaste + ".png";
+                        await reportModel.create(data);
+                        message.sendMessage(
+                            res,
+                            null,
+                            null,
+                            "Report Added !",
+                            200
+                        );
+                    });
+            });
     } catch (err) {
         message.sendMessage(res, {}, err);
     }
 });
 
-router.get('/reports/today/:id', async (req, res, next) => {
+router.get("/reports/today/:id", async (req, res, next) => {
     try {
         const reports = await reportModel.find({
             collector_id: req.params.id,
-            collection_date : new Date(new Date().toDateString()).getTime()
-        })
+            collection_date: new Date(new Date().toDateString()).getTime(),
+        });
 
-        console.log(reports)
+        console.log(new Date(new Date().toDateString()).getTime());
+        console.log(reports);
         message.sendMessage(res, reports, null, "Reports Found !", 200);
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         message.sendMessage(res, {}, err);
     }
-})
+});
 
-router.post('/reports/date/:id', async (req, res, next) => {
+router.post("/reports/date/:id", async (req, res, next) => {
     try {
         const reports = await reportModel.find({
             collector_id: req.params.id,
-            collection_date : new Date(new Date(req.body.date).toDateString()).getTime()
-        })
+            collection_date: new Date(
+                new Date(req.body.date).toDateString()
+            ).getTime(),
+        });
         message.sendMessage(res, reports, null, "Reports Found !", 200);
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         message.sendMessage(res, {}, err);
     }
-})
-
-
+});
 
 module.exports = router;
