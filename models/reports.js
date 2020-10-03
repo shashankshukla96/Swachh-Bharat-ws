@@ -52,8 +52,12 @@ const reportSchema = Schema({
         type: Number,
     },
     supervisor_activity: {
-        type: {},
+        type: [],
     },
+    is_resolved: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const reportModel = mongoose.model("reports", reportSchema);
