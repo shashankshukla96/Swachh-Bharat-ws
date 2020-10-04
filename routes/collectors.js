@@ -121,4 +121,26 @@ router.post("/reports/date/:id", async (req, res, next) => {
     }
 });
 
+
+router.put("/:id", async (req, res) => {
+    try {
+        await collectorModel.updateOne(
+            {
+                id: req.params.id,
+            },
+            {
+                $set: req.body,
+            }
+        );
+
+        const supervisor = await collectorModel.findOne({
+            id: req.params.id,
+        });
+
+        return message.sendMessage(res, supervisor);
+    } catch (err) {
+        return message.sendMessage(res, {}, err);
+    }
+});
+
 module.exports = router;

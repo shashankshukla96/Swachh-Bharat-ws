@@ -38,10 +38,11 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/reports/:id", async (req, res, next) => {
     try {
+        console.log(req.body);
         const reports = await reportModel
             .find({
                 supervisor_id: req.params.id,
-                supervisor_assign_date: req.body.date,
+                supervisor_assign_date: +req.body.date,
             })
             .sort({ collection_date: 1 });
 
@@ -73,6 +74,27 @@ router.put("/resolve/:id", async (req, res, next) => {
         );
 
         return message.sendMessage(res, null);
+    } catch (err) {
+        return message.sendMessage(res, {}, err);
+    }
+});
+
+router.put("/:id", async (req, res) => {
+    try {
+        await supervisorModel.updateOne(
+            {
+                id: req.params.id,
+            },
+            {
+                $set: req.body,
+            }
+        );
+
+        const supervisor = await supervisorModel.findOne({
+            id: req.params.id,
+        });
+
+        return message.sendMessage(res, supervisor);
     } catch (err) {
         return message.sendMessage(res, {}, err);
     }
