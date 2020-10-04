@@ -63,7 +63,7 @@ router.put("/assign", async (req, res, next) => {
                 $set: {
                     supervisor_id: supervisor_id,
                     supervisor_name: supervisor.name,
-                    supervisor_assign_date: new Date().getTime(),
+                    supervisor_assign_date: req.body.date,
                     supervisor_activity: []
                 },
             }

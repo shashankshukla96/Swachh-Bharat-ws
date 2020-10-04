@@ -38,12 +38,10 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/reports/:id", async (req, res, next) => {
     try {
-        const date = new Date(new Date(req.body.date).toDateString()).getTime();
-
         const reports = await reportModel
             .find({
                 supervisor_id: req.params.id,
-                supervisor_assign_date: date,
+                supervisor_assign_date: req.body.date,
             })
             .sort({ collection_date: 1 });
 
