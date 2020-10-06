@@ -90,29 +90,11 @@ router.post("/report", async (req, res, next) => {
     }
 });
 
-router.get("/reports/today/:id", async (req, res, next) => {
-    try {
-        const reports = await reportModel.find({
-            collector_id: req.params.id,
-            collection_date: new Date(new Date().toDateString()).getTime(),
-        });
-
-        console.log(new Date(new Date().toDateString()).getTime());
-        console.log(reports);
-        message.sendMessage(res, reports, null, "Reports Found !", 200);
-    } catch (err) {
-        console.log(err);
-        message.sendMessage(res, {}, err);
-    }
-});
-
 router.post("/reports/date/:id", async (req, res, next) => {
     try {
         const reports = await reportModel.find({
             collector_id: req.params.id,
-            collection_date: new Date(
-                new Date(req.body.date).toDateString()
-            ).getTime(),
+            collection_date: req.body.date,
         });
         message.sendMessage(res, reports, null, "Reports Found !", 200);
     } catch (err) {
