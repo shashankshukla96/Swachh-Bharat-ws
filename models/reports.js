@@ -10,7 +10,7 @@ const reportSchema = Schema({
         type: String,
     },
     collection_date: {
-        type: Number,
+        type: String,
     },
     reason: {
         type: String,

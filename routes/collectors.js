@@ -55,7 +55,6 @@ router.post("/report", async (req, res, next) => {
         const data = req.body;
         const imgHouse = data.house.split(",")[1];
         const imgWaste = data.waste.split(",")[1];
-        data.collection_date = new Date(new Date().toDateString()).getTime();
         const idHouse = makeid(6);
         const idWaste = makeid(6);
 
